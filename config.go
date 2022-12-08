@@ -7,10 +7,8 @@ import (
 )
 
 type Config struct {
-	Type       string `yaml:"type"`
-	JsonConfig struct {
-		Path string `yaml:"path"`
-	} `yaml:"json_config,omitempty"`
+	Type       string      `yaml:"type"`
+	JsonConfig JsonStorage `yaml:"json_config,omitempty"`
 }
 
 func LoadConfig(path string) (*Config, error) {

@@ -8,38 +8,38 @@ import (
 	"sort"
 )
 
-type JsonFileStorage struct {
-	path string
+type JsonStorage struct {
+	Path string `yaml:"path"`
 }
 
-func New(c Config) JsonFileStorage {
-	return JsonFileStorage{
-		path: c.JsonConfig.Path,
+func New(c Config) JsonStorage {
+	return JsonStorage{
+		Path: c.JsonConfig.Path,
 	}
 }
 
-func (jfs *JsonFileStorage) fileExists() bool {
-	_, err := os.Stat(jfs.path)
+func (jfs *JsonStorage) fileExists() bool {
+	_, err := os.Stat(jfs.Path)
 	if err != nil && errors.Is(err, fs.ErrNotExist) {
 		return false
 	}
 	return true
 }
 
-func (jfs *JsonFileStorage) writeFile(links map[string]string) error {
+func (jfs *JsonStorage) writeFile(links map[string]string) error {
 	jsonString, err := json.Marshal(links)
 	if err != nil {
 		return errors.New("could not marshal link map")
 	}
-	return os.WriteFile(jfs.path, jsonString, 0666)
+	return os.WriteFile(jfs.Path, jsonString, 0666)
 }
 
-func (jfs *JsonFileStorage) loadLinks() (map[string]string, error) {
+func (jfs *JsonStorage) loadLinks() (map[string]string, error) {
 	if !jfs.fileExists() {
 		return map[string]string{}, nil
 	}
 	m := map[string]string{}
-	dat, err := os.ReadFile(jfs.path)
+	dat, err := os.ReadFile(jfs.Path)
 	if err != nil {
 		return nil, err
 	}
@@ -49,11 +49,11 @@ func (jfs *JsonFileStorage) loadLinks() (map[string]string, error) {
 	return m, nil
 }
 
-func (jfs *JsonFileStorage) Sync() error {
+func (jfs *JsonStorage) Sync() error {
 	return nil
 }
 
-func (jfs *JsonFileStorage) GetLinkForLabel(label string) string {
+func (jfs *JsonStorage) GetLinkForLabel(label string) string {
 	label = normalizeLabel(label)
 	m, err := jfs.loadLinks()
 	if err != nil {
@@ -62,7 +62,7 @@ func (jfs *JsonFileStorage) GetLinkForLabel(label string) string {
 	return m[label]
 }
 
-func (jfs *JsonFileStorage) GetAllLabels() []string {
+func (jfs *JsonStorage) GetAllLabels() []string {
 	m, err := jfs.loadLinks()
 	if err != nil {
 		return nil
@@ -76,7 +76,7 @@ func (jfs *JsonFileStorage) GetAllLabels() []string {
 	return labels
 }
 
-func (jfs *JsonFileStorage) AddLink(label string, url string) error {
+func (jfs *JsonStorage) AddLink(label string, url string) error {
 	label = normalizeLabel(label)
 	m, err := jfs.loadLinks()
 	if err != nil {
@@ -90,7 +90,7 @@ func (jfs *JsonFileStorage) AddLink(label string, url string) error {
 	return nil
 }
 
-func (jfs *JsonFileStorage) RemoveLink(label string) error {
+func (jfs *JsonStorage) RemoveLink(label string) error {
 	label = normalizeLabel(label)
 	m, err := jfs.loadLinks()
 	if err != nil {

@@ -64,16 +64,16 @@ func TestInMemoryStorageRemoveLink(t *testing.T) {
 }
 
 func TestJsonFileStorageGet(t *testing.T) {
-	jfs := JsonFileStorage{
-		path: "./testdata/sample_links.json",
+	jfs := JsonStorage{
+		Path: "./testdata/sample_links.json",
 	}
 	actual := jfs.GetLinkForLabel("grafana")
 	assert.Equal(t, "https://grafana.com", actual)
 }
 
 func TestJsonFileStorageGetAllLabels(t *testing.T) {
-	jfs := JsonFileStorage{
-		path: "./testdata/sample_links.json",
+	jfs := JsonStorage{
+		Path: "./testdata/sample_links.json",
 	}
 
 	expected := []string{"gmail", "grafana"}
@@ -81,8 +81,8 @@ func TestJsonFileStorageGetAllLabels(t *testing.T) {
 }
 
 func TestJsonFileStorageAddLink(t *testing.T) {
-	jfs := JsonFileStorage{
-		path: "./testdata/tmp.json",
+	jfs := JsonStorage{
+		Path: "./testdata/tmp.json",
 	}
 	t.Cleanup(func() {
 		os.Remove("./testdata/tmp.json")
@@ -94,8 +94,8 @@ func TestJsonFileStorageAddLink(t *testing.T) {
 }
 
 func TestJsonFileStorageRemoveLink(t *testing.T) {
-	jfs := JsonFileStorage{
-		path: "./testdata/tmp.json",
+	jfs := JsonStorage{
+		Path: "./testdata/tmp.json",
 	}
 	t.Cleanup(func() {
 		os.Remove("./testdata/tmp.json")
