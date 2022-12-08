@@ -18,7 +18,11 @@ func initializeGotoDirectory() {
 }
 
 func LoadConfig() (*Config, error) {
-	return loadConfig("~/.config/goto/config.yaml")
+	userHome, err := os.UserHomeDir()
+	if err != nil {
+		return nil, errors.New("cannot locate user home dir for loading config")
+	}
+	return loadConfig(fmt.Sprintf("%s/.config/goto/config.yaml", userHome))
 }
 
 func NewGoto(c *Config) (Goto, error) {
@@ -92,6 +96,7 @@ func main() {
 	config, err := LoadConfig()
 	if err != nil {
 		fmt.Println("failed to load config")
+		os.Exit(1)
 	}
 	go2, err := NewGoto(config)
 	if err != nil {
@@ -101,28 +106,28 @@ func main() {
 
 	switch args[0] {
 	case "find":
-		if numArgs == 0 {
+		if numArgs == 1 {
 			fmt.Println(go2.ListGotoLinks())
-		} else if numArgs == 1 {
+		} else if numArgs == 2 {
 			fmt.Println(go2.SearchGotoLinks(args[1]))
 		} else {
 			fmt.Println("0 or 1 arguments for 'find'")
 			os.Exit(1)
 		}
 	case "sync":
-		if numArgs != 0 {
+		if numArgs != 1 {
 			fmt.Println("0 arguments for 'sync'")
 			os.Exit(1)
 		}
 		fmt.Println(go2.Sync())
 	case "remove":
-		if numArgs != 1 {
+		if numArgs != 2 {
 			fmt.Println("1 argument for 'remove'")
 			os.Exit(1)
 		}
 		fmt.Println(go2.RemoveGotoLink(args[1]))
 	case "add":
-		if numArgs != 2 {
+		if numArgs != 3 {
 			fmt.Println("2 arguments for 'add'")
 			os.Exit(1)
 		}
