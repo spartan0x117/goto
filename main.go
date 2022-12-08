@@ -1,15 +1,22 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"os"
+	"regexp"
+	"strings"
+
+	"github.com/pkg/browser"
 )
 
 type Config struct {
 	gitRepoPath string
 }
 
-type Goto map[string]string
+type Goto struct {
+	m map[string]string
+}
 
 // TODO: Will need a way to initialize the directory ~/.config/goto/ and setup an initial config, possibly prompting the user for the github url to use?
 func initializeGotoDirectory() {
@@ -26,8 +33,10 @@ func loadConfig() Config {
 // TODO: Load the mapping from an actual file
 func (c Config) loadGoto() (Goto, error) {
 	return Goto{
-		"gmail":      "https://mail.google.com",
-		"agent-docs": "https://grafana.com/docs/agent/latest/",
+		m: map[string]string{
+			"gmail":      "https://mail.google.com",
+			"agent-docs": "https://grafana.com/docs/agent/latest/",
+		},
 	}, nil
 }
 
@@ -48,7 +57,7 @@ func (g *Goto) removeGotoLink(label string) error {
 
 // TODO: Write a handler to perform a search of goto links without actually visiting
 func (g *Goto) searchGotoLinks(label string) string {
-	return ""
+	return g.m[label]
 }
 
 // TODO: Write a handler to list all goto links
@@ -58,13 +67,19 @@ func (g *Goto) listGotoLinks() []string {
 
 // TODO: Write handler to goto a link, maybe use "github.com/pkg/browser"?
 func (g *Goto) gotoLink(label string) error {
-	return nil
+	url := g.searchGotoLinks(label)
+	if url == "" {
+		return errors.New("could not find label")
+	}
+	return browser.OpenURL(url)
 }
 
 // TODO: Write a helper function to take any label and 'normalize' it, which should remove
 // any '-' characters and return the resulting label
 func normalizeLabel(label string) string {
-	return label
+	lower := strings.ToLower(label)
+	re := regexp.MustCompile("[^a-z0-9]")
+	return string(re.ReplaceAll([]byte(lower), []byte("")))
 }
 
 /*
@@ -89,7 +104,7 @@ goto remove agent-docs                                            <---- Removes 
 */
 func main() {
 	args := os.Args[1:]
-	numArgs := len(args) - 1
+	numArgs := len(args)
 
 	config := loadConfig()
 	go2, err := config.loadGoto()
@@ -131,6 +146,6 @@ func main() {
 			fmt.Println("goto expects 1 argument")
 			os.Exit(1)
 		}
-		go2.gotoLink(args[1])
+		fmt.Println(go2.gotoLink(args[0]))
 	}
 }
