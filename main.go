@@ -4,8 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"regexp"
-	"strings"
 
 	"github.com/pkg/browser"
 )
@@ -15,7 +13,7 @@ type Config struct {
 }
 
 type Goto struct {
-	m map[string]string
+	m LinkStorage
 }
 
 // TODO: Will need a way to initialize the directory ~/.config/goto/ and setup an initial config, possibly prompting the user for the github url to use?
@@ -31,43 +29,43 @@ func loadConfig() Config {
 }
 
 // TODO: Load the mapping from an actual file
-func (c Config) loadGoto() (Goto, error) {
-	return Goto{
-		m: map[string]string{
-			"gmail":      "https://mail.google.com",
-			"agent-docs": "https://grafana.com/docs/agent/latest/",
-		},
-	}, nil
+func (c Config) LoadGoto() (Goto, error) {
+	g := Goto{
+		m: NewInMemoryStorage(),
+	}
+	g.AddGotoLink("gmail", "https://mail.google.com")
+	g.AddGotoLink("grafana", "https://mail.google.com")
+	return g, nil
 }
 
 // TODO: Write handler to sync (i.e. pull)
-func (g *Goto) sync() error {
+func (g *Goto) Sync() error {
 	return nil
 }
 
 // TODO: Write handler to add a new entry
-func (g *Goto) addGotoLink(label string, url string) error {
+func (g *Goto) AddGotoLink(label string, url string) error {
 	return nil
 }
 
 // TODO: Write handler to remove a goto link
-func (g *Goto) removeGotoLink(label string) error {
+func (g *Goto) RemoveGotoLink(label string) error {
 	return nil
 }
 
 // TODO: Write a handler to perform a search of goto links without actually visiting
-func (g *Goto) searchGotoLinks(label string) string {
-	return g.m[label]
+func (g *Goto) SearchGotoLinks(label string) string {
+	return g.m.GetLinkForLabel(label)
 }
 
 // TODO: Write a handler to list all goto links
-func (g *Goto) listGotoLinks() []string {
-	return []string{}
+func (g *Goto) ListGotoLinks() []string {
+	return g.m.GetAllLabels()
 }
 
 // TODO: Write handler to goto a link, maybe use "github.com/pkg/browser"?
-func (g *Goto) gotoLink(label string) error {
-	url := g.searchGotoLinks(label)
+func (g *Goto) GotoLink(label string) error {
+	url := g.m.GetLinkForLabel(label)
 	if url == "" {
 		return errors.New("could not find label")
 	}
@@ -76,11 +74,6 @@ func (g *Goto) gotoLink(label string) error {
 
 // TODO: Write a helper function to take any label and 'normalize' it, which should remove
 // any '-' characters and return the resulting label
-func normalizeLabel(label string) string {
-	lower := strings.ToLower(label)
-	re := regexp.MustCompile("[^a-z0-9]")
-	return string(re.ReplaceAll([]byte(lower), []byte("")))
-}
 
 /*
 Example commands (assuming that the executable is in $PATH and named 'goto'):
@@ -107,7 +100,7 @@ func main() {
 	numArgs := len(args)
 
 	config := loadConfig()
-	go2, err := config.loadGoto()
+	go2, err := config.LoadGoto()
 	if err != nil {
 		fmt.Println("failed to load goto from config")
 		os.Exit(1)
@@ -116,9 +109,9 @@ func main() {
 	switch args[0] {
 	case "find":
 		if numArgs == 0 {
-			fmt.Println(go2.listGotoLinks())
+			fmt.Println(go2.ListGotoLinks())
 		} else if numArgs == 1 {
-			fmt.Println(go2.searchGotoLinks(args[1]))
+			fmt.Println(go2.SearchGotoLinks(args[1]))
 		} else {
 			fmt.Println("0 or 1 arguments for 'find'")
 			os.Exit(1)
@@ -128,24 +121,24 @@ func main() {
 			fmt.Println("0 arguments for 'sync'")
 			os.Exit(1)
 		}
-		fmt.Println(go2.sync())
+		fmt.Println(go2.Sync())
 	case "remove":
 		if numArgs != 1 {
 			fmt.Println("1 argument for 'remove'")
 			os.Exit(1)
 		}
-		fmt.Println(go2.removeGotoLink(args[1]))
+		fmt.Println(go2.RemoveGotoLink(args[1]))
 	case "add":
 		if numArgs != 2 {
 			fmt.Println("2 arguments for 'add'")
 			os.Exit(1)
 		}
-		go2.addGotoLink(args[1], args[2])
+		go2.AddGotoLink(args[1], args[2])
 	default:
 		if numArgs != 1 {
 			fmt.Println("goto expects 1 argument")
 			os.Exit(1)
 		}
-		fmt.Println(go2.gotoLink(args[0]))
+		fmt.Println(go2.GotoLink(args[0]))
 	}
 }
