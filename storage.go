@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-type LinkStorage interface {
+type Storage interface {
 	// Pulls any updates from the underlying storage mechanism
 	Sync() error
 

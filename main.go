@@ -9,7 +9,7 @@ import (
 )
 
 type Goto struct {
-	m LinkStorage
+	m Storage
 }
 
 // TODO: Will need a way to initialize the directory ~/.config/goto/ and setup an initial config, possibly prompting the user for the github url to use?
