@@ -8,10 +8,6 @@ import (
 	"github.com/pkg/browser"
 )
 
-type Config struct {
-	gitRepoPath string
-}
-
 type Goto struct {
 	m LinkStorage
 }
@@ -24,7 +20,7 @@ func initializeGotoDirectory() {
 // TODO: Read the config from ~/.config/goto/config.yaml
 func loadConfig() Config {
 	return Config{
-		gitRepoPath: "./sample_repo/",
+		Type: "todo",
 	}
 }
 

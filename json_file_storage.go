@@ -9,11 +9,17 @@ import (
 )
 
 type JsonFileStorage struct {
-	filepath string
+	path string
+}
+
+func New(c Config) JsonFileStorage {
+	return JsonFileStorage{
+		path: c.JsonConfig.Path,
+	}
 }
 
 func (jfs *JsonFileStorage) fileExists() bool {
-	_, err := os.Stat(jfs.filepath)
+	_, err := os.Stat(jfs.path)
 	if err != nil && errors.Is(err, fs.ErrNotExist) {
 		return false
 	}
@@ -25,7 +31,7 @@ func (jfs *JsonFileStorage) writeFile(links map[string]string) error {
 	if err != nil {
 		return errors.New("could not marshal link map")
 	}
-	return os.WriteFile(jfs.filepath, jsonString, 0666)
+	return os.WriteFile(jfs.path, jsonString, 0666)
 }
 
 func (jfs *JsonFileStorage) loadLinks() (map[string]string, error) {
@@ -33,7 +39,7 @@ func (jfs *JsonFileStorage) loadLinks() (map[string]string, error) {
 		return map[string]string{}, nil
 	}
 	m := map[string]string{}
-	dat, err := os.ReadFile(jfs.filepath)
+	dat, err := os.ReadFile(jfs.path)
 	if err != nil {
 		return nil, err
 	}

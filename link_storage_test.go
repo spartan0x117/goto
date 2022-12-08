@@ -7,6 +7,17 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestNormalizedLabels(t *testing.T) {
+	uppercase := "UpperCaseLabel"
+	assert.Equal(t, "uppercaselabel", normalizeLabel(uppercase))
+
+	dashes := "-grafana-agent-"
+	assert.Equal(t, "grafanaagent", normalizeLabel(dashes))
+
+	numbers := "spartan0x117"
+	assert.Equal(t, numbers, normalizeLabel(numbers))
+}
+
 func TestInMemoryStorageGet(t *testing.T) {
 	ims := InMemoryStorage{
 		linkLabelMap: map[string]string{
@@ -54,7 +65,7 @@ func TestInMemoryStorageRemoveLink(t *testing.T) {
 
 func TestJsonFileStorageGet(t *testing.T) {
 	jfs := JsonFileStorage{
-		filepath: "./testdata/sample_links.json",
+		path: "./testdata/sample_links.json",
 	}
 	actual := jfs.GetLinkForLabel("grafana")
 	assert.Equal(t, "https://grafana.com", actual)
@@ -62,7 +73,7 @@ func TestJsonFileStorageGet(t *testing.T) {
 
 func TestJsonFileStorageGetAllLabels(t *testing.T) {
 	jfs := JsonFileStorage{
-		filepath: "./testdata/sample_links.json",
+		path: "./testdata/sample_links.json",
 	}
 
 	expected := []string{"gmail", "grafana"}
@@ -71,7 +82,7 @@ func TestJsonFileStorageGetAllLabels(t *testing.T) {
 
 func TestJsonFileStorageAddLink(t *testing.T) {
 	jfs := JsonFileStorage{
-		filepath: "./testdata/tmp.json",
+		path: "./testdata/tmp.json",
 	}
 	t.Cleanup(func() {
 		os.Remove("./testdata/tmp.json")
@@ -84,7 +95,7 @@ func TestJsonFileStorageAddLink(t *testing.T) {
 
 func TestJsonFileStorageRemoveLink(t *testing.T) {
 	jfs := JsonFileStorage{
-		filepath: "./testdata/tmp.json",
+		path: "./testdata/tmp.json",
 	}
 	t.Cleanup(func() {
 		os.Remove("./testdata/tmp.json")
