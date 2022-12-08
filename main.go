@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/pkg/browser"
+	"github.com/spartan0x117/goto/cmd"
 	"github.com/spartan0x117/goto/pkg/config"
 	"github.com/spartan0x117/goto/pkg/storage"
 )
@@ -92,53 +93,54 @@ goto remove agent-docs                                            <---- Removes 
 	}
 */
 func main() {
-	args := os.Args[1:]
-	numArgs := len(args)
+	cmd.Execute()
+	// args := os.Args[1:]
+	// numArgs := len(args)
 
-	config, err := LoadConfig()
-	if err != nil {
-		fmt.Println("failed to load config")
-		os.Exit(1)
-	}
-	go2, err := NewGoto(config)
-	if err != nil {
-		fmt.Println("failed to load goto from config")
-		os.Exit(1)
-	}
+	// config, err := LoadConfig()
+	// if err != nil {
+	// 	fmt.Println("failed to load config")
+	// 	os.Exit(1)
+	// }
+	// go2, err := NewGoto(config)
+	// if err != nil {
+	// 	fmt.Println("failed to load goto from config")
+	// 	os.Exit(1)
+	// }
 
-	switch args[0] {
-	case "find":
-		if numArgs == 1 {
-			fmt.Println(go2.ListGotoLinks())
-		} else if numArgs == 2 {
-			fmt.Println(go2.SearchGotoLinks(args[1]))
-		} else {
-			fmt.Println("0 or 1 arguments for 'find'")
-			os.Exit(1)
-		}
-	case "sync":
-		if numArgs != 1 {
-			fmt.Println("0 arguments for 'sync'")
-			os.Exit(1)
-		}
-		fmt.Println(go2.Sync())
-	case "remove":
-		if numArgs != 2 {
-			fmt.Println("1 argument for 'remove'")
-			os.Exit(1)
-		}
-		fmt.Println(go2.RemoveGotoLink(args[1]))
-	case "add":
-		if numArgs != 3 {
-			fmt.Println("2 arguments for 'add'")
-			os.Exit(1)
-		}
-		go2.AddGotoLink(args[1], args[2])
-	default:
-		if numArgs != 1 {
-			fmt.Println("goto expects 1 argument")
-			os.Exit(1)
-		}
-		fmt.Println(go2.GotoLink(args[0]))
-	}
+	// switch args[0] {
+	// case "find":
+	// 	if numArgs == 1 {
+	// 		fmt.Println(go2.ListGotoLinks())
+	// 	} else if numArgs == 2 {
+	// 		fmt.Println(go2.SearchGotoLinks(args[1]))
+	// 	} else {
+	// 		fmt.Println("0 or 1 arguments for 'find'")
+	// 		os.Exit(1)
+	// 	}
+	// case "sync":
+	// 	if numArgs != 1 {
+	// 		fmt.Println("0 arguments for 'sync'")
+	// 		os.Exit(1)
+	// 	}
+	// 	fmt.Println(go2.Sync())
+	// case "remove":
+	// 	if numArgs != 2 {
+	// 		fmt.Println("1 argument for 'remove'")
+	// 		os.Exit(1)
+	// 	}
+	// 	fmt.Println(go2.RemoveGotoLink(args[1]))
+	// case "add":
+	// 	if numArgs != 3 {
+	// 		fmt.Println("2 arguments for 'add'")
+	// 		os.Exit(1)
+	// 	}
+	// 	go2.AddGotoLink(args[1], args[2])
+	// default:
+	// 	if numArgs != 1 {
+	// 		fmt.Println("goto expects 1 argument")
+	// 		os.Exit(1)
+	// 	}
+	// 	fmt.Println(go2.GotoLink(args[0]))
+	// }
 }
