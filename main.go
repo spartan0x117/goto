@@ -9,7 +9,7 @@ type Config struct {
 	gitRepoPath string
 }
 
-type GotoLinkMap map[string]string
+type Goto map[string]string
 
 // TODO: Will need a way to initialize the directory ~/.config/goto/ and setup an initial config, possibly prompting the user for the github url to use?
 func initializeGotoDirectory() {
@@ -17,42 +17,47 @@ func initializeGotoDirectory() {
 }
 
 // TODO: Read the config from ~/.config/goto/config.yaml
-func loadConfig() {
-	return
+func loadConfig() Config {
+	return Config{
+		gitRepoPath: "./sample_repo/",
+	}
 }
 
 // TODO: Load the mapping from an actual file
-func loadGotoLinkMap(repoPath string) (GotoLinkMap, error) {
-	return nil, nil
+func (c Config) loadGoto() (Goto, error) {
+	return Goto{
+		"gmail":      "https://mail.google.com",
+		"agent-docs": "https://grafana.com/docs/agent/latest/",
+	}, nil
 }
 
 // TODO: Write handler to sync (i.e. pull)
-func sync() error {
+func (g *Goto) sync() error {
 	return nil
 }
 
 // TODO: Write handler to add a new entry
-func addGotoLink(label string, url string) error {
+func (g *Goto) addGotoLink(label string, url string) error {
 	return nil
 }
 
 // TODO: Write handler to remove a goto link
-func removeGotoLink(label string) error {
+func (g *Goto) removeGotoLink(label string) error {
 	return nil
 }
 
 // TODO: Write a handler to perform a search of goto links without actually visiting
-func searchGotoLinks(label string) string {
+func (g *Goto) searchGotoLinks(label string) string {
 	return ""
 }
 
 // TODO: Write a handler to list all goto links
-func listGotoLinks() []string {
+func (g *Goto) listGotoLinks() []string {
 	return []string{}
 }
 
 // TODO: Write handler to goto a link, maybe use "github.com/pkg/browser"?
-func gotoLink(label string) error {
+func (g *Goto) gotoLink(label string) error {
 	return nil
 }
 
@@ -86,12 +91,19 @@ func main() {
 	args := os.Args[1:]
 	numArgs := len(args) - 1
 
+	config := loadConfig()
+	go2, err := config.loadGoto()
+	if err != nil {
+		fmt.Println("failed to load goto from config")
+		os.Exit(1)
+	}
+
 	switch args[0] {
 	case "find":
 		if numArgs == 0 {
-			fmt.Println(listGotoLinks())
+			fmt.Println(go2.listGotoLinks())
 		} else if numArgs == 1 {
-			fmt.Println(searchGotoLinks(args[1]))
+			fmt.Println(go2.searchGotoLinks(args[1]))
 		} else {
 			fmt.Println("0 or 1 arguments for 'find'")
 			os.Exit(1)
@@ -101,24 +113,24 @@ func main() {
 			fmt.Println("0 arguments for 'sync'")
 			os.Exit(1)
 		}
-		fmt.Println(sync())
+		fmt.Println(go2.sync())
 	case "remove":
 		if numArgs != 1 {
 			fmt.Println("1 argument for 'remove'")
 			os.Exit(1)
 		}
-		fmt.Println(removeGotoLink(args[1]))
+		fmt.Println(go2.removeGotoLink(args[1]))
 	case "add":
 		if numArgs != 2 {
 			fmt.Println("2 arguments for 'add'")
 			os.Exit(1)
 		}
-		addGotoLink(args[1], args[2])
+		go2.addGotoLink(args[1], args[2])
 	default:
 		if numArgs != 1 {
 			fmt.Println("goto expects 1 argument")
 			os.Exit(1)
 		}
-		gotoLink(args[1])
+		go2.gotoLink(args[1])
 	}
 }
