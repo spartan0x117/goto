@@ -1,4 +1,4 @@
-package main
+package config
 
 import (
 	"testing"
@@ -7,7 +7,7 @@ import (
 )
 
 func TestLoadConfig(t *testing.T) {
-	c, err := loadConfig("./testdata/sample_config.yaml")
+	c, err := LoadConfig("./testdata/sample_config.yaml")
 	assert.NoError(t, err)
 
 	assert.Equal(t, "json", c.Type)

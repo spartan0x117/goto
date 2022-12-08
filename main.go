@@ -6,10 +6,12 @@ import (
 	"os"
 
 	"github.com/pkg/browser"
+	"github.com/spartan0x117/goto/pkg/config"
+	"github.com/spartan0x117/goto/pkg/storage"
 )
 
 type Goto struct {
-	storage Storage
+	storage storage.Storage
 }
 
 // TODO: Will need a way to initialize the directory ~/.config/goto/ and setup an initial config, possibly prompting the user for the github url to use?
@@ -17,19 +19,19 @@ func initializeGotoDirectory() {
 	return
 }
 
-func LoadConfig() (*Config, error) {
+func LoadConfig() (*config.Config, error) {
 	userHome, err := os.UserHomeDir()
 	if err != nil {
 		return nil, errors.New("cannot locate user home dir for loading config")
 	}
-	return loadConfig(fmt.Sprintf("%s/.config/goto/config.yaml", userHome))
+	return config.LoadConfig(fmt.Sprintf("%s/.config/goto/config.yaml", userHome))
 }
 
-func NewGoto(c *Config) (Goto, error) {
-	var s Storage
+func NewGoto(c *config.Config) (Goto, error) {
+	var s storage.Storage
 	switch c.Type {
 	case "json":
-		s = NewJsonStorage(c)
+		s = config.NewJsonStorage(c)
 	}
 
 	g := Goto{

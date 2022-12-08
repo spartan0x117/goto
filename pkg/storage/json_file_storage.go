@@ -1,4 +1,4 @@
-package main
+package storage
 
 import (
 	"encoding/json"
@@ -10,12 +10,6 @@ import (
 
 type JsonStorage struct {
 	Path string `yaml:"path"`
-}
-
-func NewJsonStorage(c *Config) *JsonStorage {
-	return &JsonStorage{
-		Path: c.JsonConfig.Path,
-	}
 }
 
 func (jfs *JsonStorage) fileExists() bool {
