@@ -12,8 +12,8 @@ type JsonStorage struct {
 	Path string `yaml:"path"`
 }
 
-func New(c Config) JsonStorage {
-	return JsonStorage{
+func NewJsonStorage(c *Config) *JsonStorage {
+	return &JsonStorage{
 		Path: c.JsonConfig.Path,
 	}
 }

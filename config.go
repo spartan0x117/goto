@@ -11,7 +11,7 @@ type Config struct {
 	JsonConfig JsonStorage `yaml:"json_config,omitempty"`
 }
 
-func LoadConfig(path string) (*Config, error) {
+func loadConfig(path string) (*Config, error) {
 	c := &Config{}
 	fileContents, err := os.ReadFile(path)
 	if err != nil {

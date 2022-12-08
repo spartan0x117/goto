@@ -9,7 +9,7 @@ import (
 )
 
 type Goto struct {
-	m Storage
+	storage Storage
 }
 
 // TODO: Will need a way to initialize the directory ~/.config/goto/ and setup an initial config, possibly prompting the user for the github url to use?
@@ -17,51 +17,45 @@ func initializeGotoDirectory() {
 	return
 }
 
-// TODO: Read the config from ~/.config/goto/config.yaml
-func loadConfig() Config {
-	return Config{
-		Type: "todo",
-	}
+func LoadConfig() (*Config, error) {
+	return loadConfig("~/.config/goto/config.yaml")
 }
 
-// TODO: Load the mapping from an actual file
-func (c Config) LoadGoto() (Goto, error) {
-	g := Goto{
-		m: NewInMemoryStorage(),
+func NewGoto(c *Config) (Goto, error) {
+	var s Storage
+	switch c.Type {
+	case "json":
+		s = NewJsonStorage(c)
 	}
-	g.AddGotoLink("gmail", "https://mail.google.com")
-	g.AddGotoLink("grafana", "https://mail.google.com")
+
+	g := Goto{
+		storage: s,
+	}
 	return g, nil
 }
 
-// TODO: Write handler to sync (i.e. pull)
 func (g *Goto) Sync() error {
-	return nil
+	return g.storage.Sync()
 }
 
-// TODO: Write handler to add a new entry
 func (g *Goto) AddGotoLink(label string, url string) error {
-	return nil
+	return g.storage.AddLink(label, url)
 }
 
-// TODO: Write handler to remove a goto link
 func (g *Goto) RemoveGotoLink(label string) error {
-	return nil
+	return g.storage.RemoveLink(label)
 }
 
-// TODO: Write a handler to perform a search of goto links without actually visiting
 func (g *Goto) SearchGotoLinks(label string) string {
-	return g.m.GetLinkForLabel(label)
+	return g.storage.GetLinkForLabel(label)
 }
 
-// TODO: Write a handler to list all goto links
 func (g *Goto) ListGotoLinks() []string {
-	return g.m.GetAllLabels()
+	return g.storage.GetAllLabels()
 }
 
-// TODO: Write handler to goto a link, maybe use "github.com/pkg/browser"?
 func (g *Goto) GotoLink(label string) error {
-	url := g.m.GetLinkForLabel(label)
+	url := g.storage.GetLinkForLabel(label)
 	if url == "" {
 		return errors.New("could not find label")
 	}
@@ -95,8 +89,11 @@ func main() {
 	args := os.Args[1:]
 	numArgs := len(args)
 
-	config := loadConfig()
-	go2, err := config.LoadGoto()
+	config, err := LoadConfig()
+	if err != nil {
+		fmt.Println("failed to load config")
+	}
+	go2, err := NewGoto(config)
 	if err != nil {
 		fmt.Println("failed to load goto from config")
 		os.Exit(1)
