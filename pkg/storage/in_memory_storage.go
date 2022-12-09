@@ -12,7 +12,7 @@ func (ims *InMemoryStorage) Sync() error {
 }
 
 func (ims *InMemoryStorage) GetLinkForLabel(label string) string {
-	label = normalizeLabel(label)
+	label = NormalizeLabel(label)
 	return ims.linkLabelMap[label]
 }
 
@@ -26,13 +26,13 @@ func (ims *InMemoryStorage) GetAllLabels() []string {
 }
 
 func (ims *InMemoryStorage) AddLink(label string, url string) error {
-	label = normalizeLabel(label)
+	label = NormalizeLabel(label)
 	ims.linkLabelMap[label] = url
 	return nil
 }
 
 func (ims *InMemoryStorage) RemoveLink(label string) error {
-	label = normalizeLabel(label)
+	label = NormalizeLabel(label)
 	delete(ims.linkLabelMap, label)
 	return nil
 }

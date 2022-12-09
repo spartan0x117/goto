@@ -9,13 +9,13 @@ import (
 
 func TestNormalizedLabels(t *testing.T) {
 	uppercase := "UpperCaseLabel"
-	assert.Equal(t, "uppercaselabel", normalizeLabel(uppercase))
+	assert.Equal(t, "uppercaselabel", NormalizeLabel(uppercase))
 
 	dashes := "-grafana-agent-"
-	assert.Equal(t, "grafanaagent", normalizeLabel(dashes))
+	assert.Equal(t, "grafanaagent", NormalizeLabel(dashes))
 
 	numbers := "spartan0x117"
-	assert.Equal(t, numbers, normalizeLabel(numbers))
+	assert.Equal(t, numbers, NormalizeLabel(numbers))
 }
 
 func TestInMemoryStorageGet(t *testing.T) {

@@ -48,7 +48,7 @@ func (jfs *JsonStorage) Sync() error {
 }
 
 func (jfs *JsonStorage) GetLinkForLabel(label string) string {
-	label = normalizeLabel(label)
+	label = NormalizeLabel(label)
 	m, err := jfs.loadLinks()
 	if err != nil {
 		return ""
@@ -71,7 +71,7 @@ func (jfs *JsonStorage) GetAllLabels() []string {
 }
 
 func (jfs *JsonStorage) AddLink(label string, url string) error {
-	label = normalizeLabel(label)
+	label = NormalizeLabel(label)
 	m, err := jfs.loadLinks()
 	if err != nil {
 		return errors.New("could not unmarshal json file")
@@ -85,7 +85,7 @@ func (jfs *JsonStorage) AddLink(label string, url string) error {
 }
 
 func (jfs *JsonStorage) RemoveLink(label string) error {
-	label = normalizeLabel(label)
+	label = NormalizeLabel(label)
 	m, err := jfs.loadLinks()
 	if err != nil {
 		return errors.New("could not unmarshal json file")

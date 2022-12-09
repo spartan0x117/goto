@@ -22,7 +22,7 @@ type Storage interface {
 	RemoveLink(label string) error
 }
 
-func normalizeLabel(label string) string {
+func NormalizeLabel(label string) string {
 	lower := strings.ToLower(label)
 	re := regexp.MustCompile("[^a-z0-9]")
 	return string(re.ReplaceAll([]byte(lower), []byte("")))
