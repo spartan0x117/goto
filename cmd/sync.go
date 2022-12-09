@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/spf13/cobra"
 )
 
@@ -13,6 +15,7 @@ var syncCmd = &cobra.Command{
 	Short: "Pulls goto links from configured source",
 	Long:  "Pulls goto links from configured source. This is effectively a no-op for the local json file store",
 	Run: func(cmd *cobra.Command, args []string) {
-		store.Sync()
+		// TODO: Make this a prettier message
+		fmt.Println(store.Sync())
 	},
 }

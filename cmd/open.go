@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/pkg/browser"
 	"github.com/spf13/cobra"
@@ -19,6 +20,7 @@ var openCmd = &cobra.Command{
 		url := store.GetLinkForLabel(args[0])
 		if url == "" {
 			fmt.Printf("could not find label '%s'\n", args[0])
+			os.Exit(0)
 		}
 		browser.OpenURL(url)
 	},

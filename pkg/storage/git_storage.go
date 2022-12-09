@@ -1,6 +1,7 @@
 package storage
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/go-git/go-git/v5"
@@ -31,7 +32,7 @@ func (gs *GitStorage) Sync() error {
 	}
 
 	err = w.Pull(&git.PullOptions{RemoteName: "origin"})
-	if err != nil {
+	if err != nil && !errors.Is(err, git.NoErrAlreadyUpToDate) {
 		fmt.Println("encountered issue trying to sync git repo")
 		return fmt.Errorf("encountered an error trying to pull from remote origin: %w", err)
 	}
@@ -41,49 +42,23 @@ func (gs *GitStorage) Sync() error {
 func (gs *GitStorage) GetLinkForLabel(label string) string {
 	gs.initJsonStorage()
 
-	err := gs.Sync()
-	if err != nil {
-		return ""
-	}
 	return gs.jsonStorage.GetLinkForLabel(label)
 }
 
 func (gs *GitStorage) GetAllLabels() []string {
 	gs.initJsonStorage()
 
-	err := gs.Sync()
-	if err != nil {
-		return []string{}
-	}
 	return gs.jsonStorage.GetAllLabels()
 }
 
 func (gs *GitStorage) AddLink(label string, url string) error {
 	gs.initJsonStorage()
 
-	err := gs.Sync()
-	if err != nil {
-		return err
-	}
-	err = gs.jsonStorage.AddLink(label, url)
-	if err != nil {
-		return err
-	}
-	// TODO: COMMIT AND PUSH CHANGES
-	return nil
+	return gs.jsonStorage.AddLink(label, url)
 }
 
 func (gs *GitStorage) RemoveLink(label string) error {
 	gs.initJsonStorage()
 
-	err := gs.Sync()
-	if err != nil {
-		return err
-	}
-	err = gs.jsonStorage.RemoveLink(label)
-	if err != nil {
-		return err
-	}
-	// TODO: COMMIT AND PUSH CHANGES
-	return nil
+	return gs.jsonStorage.RemoveLink(label)
 }
