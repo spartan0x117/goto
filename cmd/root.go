@@ -52,6 +52,7 @@ func initConfig() {
 	case "git":
 		store = &storage.GitStorage{
 			LocalPath: viper.GetString("git_config.local_path"),
+			AutoSync:  viper.GetBool("git_config.auto_sync"),
 		}
 	}
 }
