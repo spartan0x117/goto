@@ -44,7 +44,7 @@ func (gs *GitStorage) commitAndPush(label string, isAdd bool) error {
 	}
 
 	fmt.Println("committing changes...")
-	_, err = w.Commit(createCommitMessage(label, isAdd), &git.CommitOptions{All: true})
+	_, err = w.Commit(generateCommitMessage(label, isAdd), &git.CommitOptions{All: true})
 	if err != nil {
 		return fmt.Errorf("encountered an error trying to commit changes: %w", err)
 	}
