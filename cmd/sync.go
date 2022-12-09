@@ -15,7 +15,8 @@ var syncCmd = &cobra.Command{
 	Short: "Pulls goto links from configured source",
 	Long:  "Pulls goto links from configured source. This is effectively a no-op for the local json file store",
 	Run: func(cmd *cobra.Command, args []string) {
-		// TODO: Make this a prettier message
-		fmt.Println(store.Sync())
+		if err := store.Sync(); err != nil {
+			fmt.Println(err)
+		}
 	},
 }

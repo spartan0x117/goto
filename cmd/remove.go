@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/spf13/cobra"
 )
 
@@ -13,6 +15,8 @@ var removeCmd = &cobra.Command{
 	Short: "Removes a goto link",
 	Long:  "Removes a goto link from the configured store and updates it",
 	Run: func(cmd *cobra.Command, args []string) {
-		store.RemoveLink(args[0])
+		if err := store.RemoveLink(args[0]); err != nil {
+			fmt.Println(err)
+		}
 	},
 }

@@ -12,12 +12,15 @@ func init() {
 
 var findCmd = &cobra.Command{
 	Use:   "find",
-	Short: "Finds goto links in the store according to the input regex",
-	Long:  "Finds goto links in the store according to the input regex. If no regex is supplied it will return all goto links in the store",
+	Short: "Finds and displays goto links without opening in the browser",
+	Long:  "Finds and displays the link for the goto label specified. If no label is supplied it will display all goto labels in the store",
 	Run: func(cmd *cobra.Command, args []string) {
 		switch len(args) {
 		case 0:
-			fmt.Println(store.GetAllLabels())
+			labels := store.GetAllLabels()
+			for _, l := range labels {
+				fmt.Println(l)
+			}
 		case 1:
 			fmt.Println(store.GetLinkForLabel(args[0]))
 		}

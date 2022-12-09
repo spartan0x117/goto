@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/spf13/cobra"
 )
 
@@ -13,6 +15,9 @@ var addCmd = &cobra.Command{
 	Short: "Add a new goto link",
 	Long:  "Add a new goto link with the specified label and optional description",
 	Run: func(cmd *cobra.Command, args []string) {
-		store.AddLink(args[0], args[1])
+		err := store.AddLink(args[0], args[1])
+		if err != nil {
+			fmt.Println(err)
+		}
 	},
 }
