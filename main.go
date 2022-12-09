@@ -2,8 +2,6 @@ package main
 
 import (
 	"errors"
-	"fmt"
-	"os"
 
 	"github.com/pkg/browser"
 	"github.com/spartan0x117/goto/cmd"
@@ -13,19 +11,6 @@ import (
 
 type Goto struct {
 	storage storage.Storage
-}
-
-// TODO: Will need a way to initialize the directory ~/.config/goto/ and setup an initial config, possibly prompting the user for the github url to use?
-func initializeGotoDirectory() {
-	return
-}
-
-func LoadConfig() (*config.Config, error) {
-	userHome, err := os.UserHomeDir()
-	if err != nil {
-		return nil, errors.New("cannot locate user home dir for loading config")
-	}
-	return config.LoadConfig(fmt.Sprintf("%s/.config/goto/config.yaml", userHome))
 }
 
 func NewGoto(c *config.Config) (Goto, error) {
@@ -69,78 +54,6 @@ func (g *Goto) GotoLink(label string) error {
 	return browser.OpenURL(url)
 }
 
-// TODO: Write a helper function to take any label and 'normalize' it, which should remove
-// any '-' characters and return the resulting label
-
-/*
-Example commands (assuming that the executable is in $PATH and named 'goto'):
-
-goto add agent-docs https://grafana.com/docs/agent/latest/        <---- Adds a link with the label 'agentdocs'
-
-goto agent-docs                                                   <---- Tries to find a link with the label 'agentdocs', and opens it in the browser if it exists
-
-goto sync                                                         <---- Pulls from github
-
-goto find agent-docs                                              <---- Similar to basic goto, but only displays all matching links
-
-goto remove agent-docs                                            <---- Removes 'agentdocs' link, if it exists
-
--- golinks.json
-
-	{
-		"agentdocs": "https://grafana.com/docs/agent/latest/",
-		"bamboo": "https://grafana.bamboohr.com/"
-	}
-*/
 func main() {
 	cmd.Execute()
-	// args := os.Args[1:]
-	// numArgs := len(args)
-
-	// config, err := LoadConfig()
-	// if err != nil {
-	// 	fmt.Println("failed to load config")
-	// 	os.Exit(1)
-	// }
-	// go2, err := NewGoto(config)
-	// if err != nil {
-	// 	fmt.Println("failed to load goto from config")
-	// 	os.Exit(1)
-	// }
-
-	// switch args[0] {
-	// case "find":
-	// 	if numArgs == 1 {
-	// 		fmt.Println(go2.ListGotoLinks())
-	// 	} else if numArgs == 2 {
-	// 		fmt.Println(go2.SearchGotoLinks(args[1]))
-	// 	} else {
-	// 		fmt.Println("0 or 1 arguments for 'find'")
-	// 		os.Exit(1)
-	// 	}
-	// case "sync":
-	// 	if numArgs != 1 {
-	// 		fmt.Println("0 arguments for 'sync'")
-	// 		os.Exit(1)
-	// 	}
-	// 	fmt.Println(go2.Sync())
-	// case "remove":
-	// 	if numArgs != 2 {
-	// 		fmt.Println("1 argument for 'remove'")
-	// 		os.Exit(1)
-	// 	}
-	// 	fmt.Println(go2.RemoveGotoLink(args[1]))
-	// case "add":
-	// 	if numArgs != 3 {
-	// 		fmt.Println("2 arguments for 'add'")
-	// 		os.Exit(1)
-	// 	}
-	// 	go2.AddGotoLink(args[1], args[2])
-	// default:
-	// 	if numArgs != 1 {
-	// 		fmt.Println("goto expects 1 argument")
-	// 		os.Exit(1)
-	// 	}
-	// 	fmt.Println(go2.GotoLink(args[0]))
-	// }
 }
