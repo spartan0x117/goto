@@ -10,6 +10,7 @@ import (
 type Config struct {
 	Type       string              `yaml:"type"`
 	JsonConfig storage.JsonStorage `yaml:"json_config,omitempty"`
+	GitConfig  storage.GitStorage  `yaml:"git_config,omitempty"`
 }
 
 func LoadConfig(path string) (*Config, error) {
@@ -20,10 +21,4 @@ func LoadConfig(path string) (*Config, error) {
 	}
 	yaml.Unmarshal(fileContents, c)
 	return c, nil
-}
-
-func NewJsonStorage(c *Config) *storage.JsonStorage {
-	return &storage.JsonStorage{
-		Path: c.JsonConfig.Path,
-	}
 }

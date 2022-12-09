@@ -49,5 +49,9 @@ func initConfig() {
 		store = &storage.JsonStorage{
 			Path: viper.GetString("json_config.path"),
 		}
+	case "git":
+		store = &storage.GitStorage{
+			LocalPath: viper.GetString("git_config.local_path"),
+		}
 	}
 }
