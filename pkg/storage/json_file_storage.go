@@ -21,7 +21,7 @@ func (jfs *JsonStorage) fileExists() bool {
 }
 
 func (jfs *JsonStorage) writeFile(links map[string]string) error {
-	jsonString, err := json.Marshal(links)
+	jsonString, err := json.MarshalIndent(links, "", "  ")
 	if err != nil {
 		return errors.New("could not marshal link map")
 	}
