@@ -32,10 +32,6 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.config/goto/config.yaml)")
-	switch viper.Get("type") {
-	case "json":
-		store = &storage.JsonStorage{}
-	}
 }
 
 func initConfig() {
@@ -50,10 +46,14 @@ func initConfig() {
 		viper.SetConfigName("config")
 	}
 
-	if err := viper.ReadInConfig(); err == nil {
-		fmt.Println("Using config file:", viper.ConfigFileUsed())
-		fmt.Println(viper.Get("json_config"))
-	} else {
+	if err := viper.ReadInConfig(); err != nil {
 		fmt.Println("Could not locate goto config file")
+	}
+
+	switch viper.GetString("type") {
+	case "json":
+		store = &storage.JsonStorage{
+			Path: viper.GetString("json_config.path"),
+		}
 	}
 }
