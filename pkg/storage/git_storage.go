@@ -9,6 +9,7 @@ import (
 
 type GitStorage struct {
 	LocalPath   string `yaml:"local_path"`
+	AutoSync    bool   `yaml:"auto_sync,omitempty"`
 	jsonStorage *JsonStorage
 }
 
@@ -17,8 +18,6 @@ func (gs *GitStorage) initJsonStorage() {
 }
 
 func (gs *GitStorage) Sync() error {
-	gs.initJsonStorage()
-
 	repo, err := git.PlainOpen(gs.LocalPath)
 	if err != nil {
 		fmt.Println("encountered issue trying to sync git repo")
@@ -40,24 +39,48 @@ func (gs *GitStorage) Sync() error {
 }
 
 func (gs *GitStorage) GetLinkForLabel(label string) string {
+	if gs.AutoSync {
+		if err := gs.Sync(); err != nil {
+			fmt.Println(err)
+		}
+	}
+
 	gs.initJsonStorage()
 
 	return gs.jsonStorage.GetLinkForLabel(label)
 }
 
 func (gs *GitStorage) GetAllLabels() []string {
+	if gs.AutoSync {
+		if err := gs.Sync(); err != nil {
+			fmt.Println(err)
+		}
+	}
+
 	gs.initJsonStorage()
 
 	return gs.jsonStorage.GetAllLabels()
 }
 
 func (gs *GitStorage) AddLink(label string, url string) error {
+	if gs.AutoSync {
+		if err := gs.Sync(); err != nil {
+			fmt.Println(err)
+		}
+	}
+
 	gs.initJsonStorage()
 
 	return gs.jsonStorage.AddLink(label, url)
 }
 
 func (gs *GitStorage) RemoveLink(label string) error {
+	if gs.AutoSync {
+		if err := gs.Sync(); err != nil {
+			fmt.Println(err)
+		}
+	}
+
 	gs.initJsonStorage()
 
 	return gs.jsonStorage.RemoveLink(label)
