@@ -19,7 +19,15 @@ func (gs *GitStorage) initJsonStorage() {
 	gs.jsonStorage = &JsonStorage{Path: fmt.Sprintf("%s%s", gs.LocalPath, fileName)}
 }
 
-func (gs *GitStorage) commitAndPush(label string) error {
+func generateCommitMessage(label string, isAdd bool) string {
+	if isAdd {
+		return fmt.Sprintf("Adding '%s'", label)
+	} else {
+		return fmt.Sprintf("Removing '%s'", label)
+	}
+}
+
+func (gs *GitStorage) commitAndPush(label string, isAdd bool) error {
 	repo, err := git.PlainOpen(gs.LocalPath)
 	if err != nil {
 		return fmt.Errorf("encountered an error trying to open local git repo: %w", err)
@@ -36,7 +44,7 @@ func (gs *GitStorage) commitAndPush(label string) error {
 	}
 
 	fmt.Println("committing changes...")
-	_, err = w.Commit(fmt.Sprintf("Adding '%s'", label), &git.CommitOptions{All: true})
+	_, err = w.Commit(createCommitMessage(label, isAdd), &git.CommitOptions{All: true})
 	if err != nil {
 		return fmt.Errorf("encountered an error trying to commit changes: %w", err)
 	}
@@ -107,7 +115,7 @@ func (gs *GitStorage) AddLink(label string, url string) error {
 		return err
 	}
 
-	if err := gs.commitAndPush(label); err != nil {
+	if err := gs.commitAndPush(label, true); err != nil {
 		fmt.Println(err)
 	}
 	return err
@@ -127,7 +135,7 @@ func (gs *GitStorage) RemoveLink(label string) error {
 		return fmt.Errorf("error trying to remove link from local file: %w", err)
 	}
 
-	if err := gs.commitAndPush(label); err != nil {
+	if err := gs.commitAndPush(label, false); err != nil {
 		return err
 	}
 	return nil
