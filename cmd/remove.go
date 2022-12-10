@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
 )
@@ -17,6 +18,7 @@ var removeCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		if err := store.RemoveLink(args[0]); err != nil {
 			fmt.Println(err)
+			os.Exit(1)
 		}
 	},
 }

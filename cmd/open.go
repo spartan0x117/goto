@@ -22,13 +22,14 @@ var openCmd = &cobra.Command{
 		url := store.GetLinkForLabel(label)
 		if url == "" {
 			fmt.Printf("could not find label '%s'\n", args[0])
-			os.Exit(0)
+			os.Exit(1)
 		}
 		if pathExists {
 			url = url + "/" + path
 		}
 		if err := browser.OpenURL(url); err != nil {
 			fmt.Printf("error trying to open '%s' in browser\n", url)
+			os.Exit(1)
 		}
 	},
 }

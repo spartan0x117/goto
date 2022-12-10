@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
 )
@@ -18,6 +19,7 @@ var addCmd = &cobra.Command{
 		err := store.AddLink(args[0], args[1])
 		if err != nil {
 			fmt.Println(err)
+			os.Exit(1)
 		}
 	},
 }
