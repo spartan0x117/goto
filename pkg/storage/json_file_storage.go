@@ -3,21 +3,12 @@ package storage
 import (
 	"encoding/json"
 	"errors"
-	"io/fs"
 	"os"
 	"sort"
 )
 
 type JsonStorage struct {
 	Path string `yaml:"path"`
-}
-
-func (jfs *JsonStorage) fileExists() bool {
-	_, err := os.Stat(jfs.Path)
-	if err != nil && errors.Is(err, fs.ErrNotExist) {
-		return false
-	}
-	return true
 }
 
 func (jfs *JsonStorage) writeFile(links map[string]string) error {
@@ -29,7 +20,7 @@ func (jfs *JsonStorage) writeFile(links map[string]string) error {
 }
 
 func (jfs *JsonStorage) loadLinks() (map[string]string, error) {
-	if !jfs.fileExists() {
+	if !FileExists(jfs.Path) {
 		return map[string]string{}, nil
 	}
 	m := map[string]string{}

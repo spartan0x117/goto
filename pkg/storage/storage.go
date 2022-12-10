@@ -1,6 +1,9 @@
 package storage
 
 import (
+	"errors"
+	"io/fs"
+	"os"
 	"regexp"
 	"strings"
 )
@@ -26,4 +29,12 @@ func NormalizeLabel(label string) string {
 	lower := strings.ToLower(label)
 	re := regexp.MustCompile("[^a-z0-9]")
 	return string(re.ReplaceAll([]byte(lower), []byte("")))
+}
+
+func FileExists(path string) bool {
+	_, err := os.Stat(path)
+	if err != nil && errors.Is(err, fs.ErrNotExist) {
+		return false
+	}
+	return true
 }
