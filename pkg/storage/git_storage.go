@@ -104,10 +104,10 @@ func (gs *GitStorage) GetAllLabels() []string {
 }
 
 func (gs *GitStorage) AddLink(label string, url string) error {
-	if gs.AutoSync {
-		if err := gs.Sync(); err != nil {
-			fmt.Println(err)
-		}
+	// Always pull latest changes before adding a new link to avoid
+	// breaking changes
+	if err := gs.Sync(); err != nil {
+		fmt.Println(err)
 	}
 
 	gs.initJsonStorage()
@@ -138,10 +138,10 @@ func (gs *GitStorage) AddLink(label string, url string) error {
 }
 
 func (gs *GitStorage) RemoveLink(label string) error {
-	if gs.AutoSync {
-		if err := gs.Sync(); err != nil {
-			fmt.Println(err)
-		}
+	// Always pull latest changes before removing a link to avoid
+	// breaking changes
+	if err := gs.Sync(); err != nil {
+		fmt.Println(err)
 	}
 
 	gs.initJsonStorage()
