@@ -3,6 +3,8 @@ package storage
 import (
 	"errors"
 	"fmt"
+	"os"
+	"strings"
 
 	"github.com/go-git/go-git/v5"
 )
@@ -109,6 +111,20 @@ func (gs *GitStorage) AddLink(label string, url string) error {
 	}
 
 	gs.initJsonStorage()
+
+	// Check if the link already exists, if it does, warn and prompt
+	// the user whether they would like to update it
+	existingLink := gs.jsonStorage.GetLinkForLabel(label)
+	if existingLink != "" {
+		fmt.Printf("link already exists for '%s': %s. Would you like to update it? (y/n)\n> ", label, existingLink)
+		var shouldUpdate string
+		fmt.Scanln(&shouldUpdate)
+		shouldUpdate = strings.ToLower(shouldUpdate)
+		if shouldUpdate != "y" {
+			fmt.Printf("not updating '%s'\n", label)
+			os.Exit(1)
+		}
+	}
 
 	err := gs.jsonStorage.AddLink(label, url)
 	if err != nil {
