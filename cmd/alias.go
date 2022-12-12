@@ -21,7 +21,7 @@ var aliasCmd = &cobra.Command{
 var aliasAddCmd = &cobra.Command{
 	Use:   "add",
 	Short: "Add a local alias for an existing label",
-	Long:  "Add a local alias for an existing label. These configured aliases will be put in ~/.config/goto/aliases.json",
+	Long:  "Add a local alias for an existing label. These configured aliases are stored in ~/.config/goto/aliases.json",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println(args)
 	},
@@ -30,7 +30,7 @@ var aliasAddCmd = &cobra.Command{
 var aliasRemoveCmd = &cobra.Command{
 	Use:   "remove",
 	Short: "Remove a local alias for an existing label",
-	Long:  "Remove a local alias for an existing label. These configured aliases will be stored in ~/.config/goto/aliases.json",
+	Long:  "Remove a local alias for an existing label. These configured aliases are stored in ~/.config/goto/aliases.json",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println(args)
 	},
