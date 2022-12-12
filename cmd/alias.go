@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/spartan0x117/goto/pkg/alias"
 	"github.com/spf13/cobra"
 )
 
@@ -22,8 +23,12 @@ var aliasAddCmd = &cobra.Command{
 	Use:   "add",
 	Short: "Add a local alias for an existing label",
 	Long:  "Add a local alias for an existing label. These configured aliases are stored in ~/.config/goto/aliases.json",
+	Args:  cobra.ExactArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println(args)
+		err := alias.AddAlias(args[0], args[1])
+		if err != nil {
+			fmt.Println(err)
+		}
 	},
 }
 
@@ -31,7 +36,11 @@ var aliasRemoveCmd = &cobra.Command{
 	Use:   "remove",
 	Short: "Remove a local alias for an existing label",
 	Long:  "Remove a local alias for an existing label. These configured aliases are stored in ~/.config/goto/aliases.json",
+	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println(args)
+		err := alias.RemoveAlias(args[0])
+		if err != nil {
+			fmt.Println(err)
+		}
 	},
 }

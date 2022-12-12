@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/pkg/browser"
+	"github.com/spartan0x117/goto/pkg/alias"
 	"github.com/spf13/cobra"
 )
 
@@ -19,6 +20,7 @@ var openCmd = &cobra.Command{
 	Long:  "Open the goto link in the default browser",
 	Run: func(cmd *cobra.Command, args []string) {
 		label, path, pathExists := strings.Cut(args[0], "/")
+		label = alias.GetLabelOrAlias(label)
 		url := store.GetLinkForLabel(label)
 		if url == "" {
 			fmt.Printf("could not find label '%s'\n", args[0])

@@ -9,6 +9,7 @@ import (
 func main() {
 	validCommands := map[string]bool{
 		"add":    true,
+		"alias":  true,
 		"find":   true,
 		"open":   true,
 		"remove": true,

@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/spartan0x117/goto/pkg/alias"
 	"github.com/spf13/cobra"
 )
 
@@ -22,7 +23,7 @@ var findCmd = &cobra.Command{
 				fmt.Println(l)
 			}
 		case 1:
-			fmt.Println(store.GetLinkForLabel(args[0]))
+			fmt.Println(store.GetLinkForLabel(alias.GetLabelOrAlias(args[0])))
 		}
 	},
 }
