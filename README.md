@@ -41,6 +41,8 @@ Run `mkdir -p ~/.config/goto/`
 
 Add your config at `~/.config/goto/config.yaml`
 
+Create an initial empty `{}` map in `~/.config/goto/aliases.json` for storing aliases
+
 # Ideas for future development
 _There is no official roadmap, but these are some ideas for future improvements._
 - [ ] Auxiliary local/private store for the git-based store. This would allow for adding links that are not pushed to the git remote and
@@ -49,5 +51,5 @@ _There is no official roadmap, but these are some ideas for future improvements.
   would prevent polluting the shared repo with duplicate urls. What is short/convenient for one person may not be for another
   (e.g. say there is an existing `github:https://github.com` entry. Someone who uses it a lot may want to have 
   `gh:https://github.com` for quick access).
-- [ ] Initialization helpers (creating `~/.config/goto/`, setting up `links.json` in an empty repo).
+- [ ] Initialization helpers (creating `~/.config/goto/` along with necessary files, setting up `links.json` in an empty repo).
 - [ ] Label/command tab-completion.
