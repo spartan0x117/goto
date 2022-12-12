@@ -19,6 +19,9 @@ For a git config, you need to have checked out a git repository containing a fil
 - `add <label> <url>`: adds a new entry to the link store with the specified label and url. If an entry with the same label already exists,
   a prompt appears with a choice whether to update the entry or not.
     - NOTE: for a `git_config` add will always pull the configured repo before running.
+- `alias`
+  - `alias add <alias> <label>`: adds a new local alias for a label. The alias file is found at `~/.config/goto/aliases.json`.
+  - `alias remove <alias>`: removes a local alias.
 - `find [<label>]`: displays the url for the specified label, if any. If no label is specified, will display *all* labels in the store. 
   Combine this with `grep` to find a label based on a regex!
 - `open <label>`: opens the url for the label in a browser. It is possible to supply a path to be used with the url.
@@ -36,11 +39,11 @@ At the root of the repository, run `make build` to build a binary to `out/goto`.
 
 # Ideas for future development
 _There is no official roadmap, but these are some ideas for future improvements._
-- Auxiliary local/private store for the git-based store. This would allow for adding links that are not pushed to the git remote and
+- [ ] Auxiliary local/private store for the git-based store. This would allow for adding links that are not pushed to the git remote and
   are only for the current user.
-- Local aliases. Similar to the above, it would allow the user to create aliases for labels that are not pushed to a remote. This 
+- [X] Local aliases. Similar to the above, it would allow the user to create aliases for labels that are not pushed to a remote. This 
   would prevent polluting the shared repo with duplicate urls. What is short/convenient for one person may not be for another
   (e.g. say there is an existing `github:https://github.com` entry. Someone who uses it a lot may want to have 
   `gh:https://github.com` for quick access).
-- Initialization helpers (creating `~/.config/goto/`, setting up `links.json` in an empty repo).
-- Label/command tab-completion.
+- [ ] Initialization helpers (creating `~/.config/goto/`, setting up `links.json` in an empty repo).
+- [ ] Label/command tab-completion.
