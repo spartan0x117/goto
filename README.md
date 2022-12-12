@@ -53,3 +53,4 @@ _There is no official roadmap, but these are some ideas for future improvements.
   `gh:https://github.com` for quick access).
 - [ ] Initialization helpers (creating `~/.config/goto/` along with necessary files, setting up `links.json` in an empty repo).
 - [ ] Label/command tab-completion.
+- [ ] Server mode. Would expose a locally running API that could be used by a browser directly.
