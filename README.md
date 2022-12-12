@@ -37,6 +37,10 @@ For a git config, you need to have checked out a git repository containing a fil
 At the root of the repository, run `make build` to build a binary to `out/goto`. Move this binary to a directory (like `/usr/local/bin`) in your 
 `PATH` to use it easily from the command line.
 
+Run `mkdir -p ~/.config/goto/`
+
+Add your config at `~/.config/goto/config.yaml`
+
 # Ideas for future development
 _There is no official roadmap, but these are some ideas for future improvements._
 - [ ] Auxiliary local/private store for the git-based store. This would allow for adding links that are not pushed to the git remote and
