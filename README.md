@@ -1,10 +1,13 @@
 # goto
-A CLI alternative to go/ links. The general idea is to allow for quickly visiting urls based on easily-remembered and discovered labels. 
-These `label->url` pairs can be collaboratively updated, making it more powerful the more people in your group/org/company that use it. 
 
-# Configuration
+A CLI alternative to go/ links. The general idea is to allow for quickly visiting urls based on easily-remembered and discovered labels.
+These `label->url` pairs can be collaboratively updated, making it more powerful the more people in your group/org/company that use it.
+
+## Configuration
+
 ~/.config/goto/config.yaml
-```
+
+```yaml
 type: "git|json"
 git_config:
   local_path: /path/to/repo/on/local/machine
@@ -15,10 +18,11 @@ json_config:
 
 For a git config, you need to have checked out a git repository containing a file named `links.json`
 
-# Commands
+## Commands
+
 - `add <label> <url>`: adds a new entry to the link store with the specified label and url. If an entry with the same label already exists,
   a prompt appears with a choice whether to update the entry or not.
-    - NOTE: for a `git_config` add will always pull the configured repo before running.
+  - NOTE: for a `git_config` add will always pull the configured repo before running.
 - `alias`
   - `alias add <alias> <label>`: adds a new local alias for a label. The alias file is found at `~/.config/goto/aliases.json`.
   - `alias remove <alias>`: removes a local alias.
@@ -33,22 +37,45 @@ For a git config, you need to have checked out a git repository containing a fil
   - NOTE: for a `git_config` remove will always pull the configured repo before running.
 - `sync`: syncs with the configured remote. For a `json_config` this is a no-op. For a `git_config`, this pulls from the configured remote.
 
-# Build/develop/setup locally
-At the root of the repository, run `make build` to build a binary to `out/goto`. Move this binary to a directory (like `/usr/local/bin`) in your 
-`PATH` to use it easily from the command line.
+## Build/develop/setup locally
 
-Run `mkdir -p ~/.config/goto/`
+At the root of the repository, run
+
+```bash
+make build
+```
+
+to build a binary to `out/goto`.  To install the binary, run:
+
+```bash
+sudo make install
+```
+
+By default, it will be installed in `/usr/local/bin`. You can install it privately by overriding the destination directory:
+
+```bash
+make install DEST=<path>
+ ```
+
+ where `<path>` is a directory in `$PATH` and is writable by you.
+
+Create a config directory for goto:
+
+```bash
+mkdir -p ~/.config/goto/
+```
 
 Add your config at `~/.config/goto/config.yaml`
 
 Create an initial empty `{}` map in `~/.config/goto/aliases.json` for storing aliases
 
-# Ideas for future development
-_There is no official roadmap, but these are some ideas for future improvements._
+## Ideas for future development
+
+*There is no official roadmap, but these are some ideas for future improvements.*
+
 - [ ] Auxiliary local/private store for the git-based store. This would allow for adding links that are not pushed to the git remote and
   are only for the current user.
-- [X] Local aliases. Similar to the above, it would allow the user to create aliases for labels that are not pushed to a remote. This 
-  would prevent polluting the shared repo with duplicate urls. What is short/convenient for one person may not be for another
+- [X] Local aliases. Similar to the above, it would allow the user to create aliases for labels that are not pushed to a remote. This would prevent polluting the shared repo with duplicate urls. What is short/convenient for one person may not be for another
   (e.g. say there is an existing `github:https://github.com` entry. Someone who uses it a lot may want to have 
   `gh:https://github.com` for quick access).
 - [ ] Initialization helpers (creating `~/.config/goto/` along with necessary files, setting up `links.json` in an empty repo).

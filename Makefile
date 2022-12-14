@@ -1,5 +1,6 @@
 BINARY_NAME=goto
 BINARY_OUT_DIR=out
+DEST=/usr/local/bin
 
 all: build test
 
@@ -12,3 +13,6 @@ clean:
 
 test:
 	go test -v ./...
+
+install:
+	install -D ${BINARY_OUT_DIR}/${BINARY_NAME} ${DEST}/${BINARY_NAME}
