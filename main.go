@@ -11,6 +11,7 @@ func main() {
 		"add":    true,
 		"alias":  true,
 		"find":   true,
+		"init":   true,
 		"open":   true,
 		"remove": true,
 		"sync":   true,
