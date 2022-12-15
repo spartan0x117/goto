@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/spartan0x117/goto/pkg/storage"
 	"github.com/spf13/cobra"
@@ -33,11 +34,36 @@ func initConfig() {
 		viper.SetConfigFile(cfgFile)
 	} else {
 		home, err := os.UserHomeDir()
+		configDir := fmt.Sprintf("%s/.config/goto", home)
 		cobra.CheckErr(err)
 
-		viper.AddConfigPath(fmt.Sprintf("%s/.config/goto", home))
+		viper.AddConfigPath(configDir)
 		viper.SetConfigType("yaml")
 		viper.SetConfigName("config")
+
+		err = os.MkdirAll(configDir, os.ModePerm)
+		// don't fail if directory already exists
+		if err != nil && !os.IsExist(err) {
+			panic(fmt.Errorf("could not create %v: %w", configDir, err))
+		}
+		configPath := filepath.Join(configDir, "config.yaml")
+		if _, err := os.Stat(configPath); err != nil {
+			// default container dir for links.json is configDir
+			jsonStoragePath := filepath.Join(configDir, "links.json")
+			viper.SetDefault("type", "json")
+			viper.SetDefault("json_config", map[string]string{"path": jsonStoragePath})
+			err = viper.WriteConfigAs(configPath)
+			if err != nil {
+				panic(fmt.Errorf("%v: %w", configPath, err))
+			}
+		}
+		aliasesPath := filepath.Join(configDir, "aliases.json")
+		if _, err := os.Stat(aliasesPath); err != nil {
+			err := os.WriteFile(aliasesPath, []byte("{}\n"), 0600)
+			if err != nil {
+				panic(fmt.Errorf("%v: %w", aliasesPath, err))
+			}
+		}
 	}
 
 	if err := viper.ReadInConfig(); err != nil {
