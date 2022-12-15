@@ -47,6 +47,7 @@ make build
 
 to build a binary to `out/goto`.  To install the binary, run:
 
+
 ```bash
 sudo make install
 ```
@@ -66,6 +67,7 @@ goto init
 ```
 
 Files will be created in `~/.config/goto/`.
+
 
 ## Ideas for future development
 
