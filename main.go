@@ -13,6 +13,7 @@ func main() {
 		"find":   true,
 		"open":   true,
 		"remove": true,
+		"server": true,
 		"sync":   true,
 	}
 
