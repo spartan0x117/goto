@@ -35,7 +35,7 @@ func NewServer(s storage.Storage) *echo.Echo {
 		if label != "" {
 			link := s.GetLinkForLabel(label)
 			if link == "" {
-				return c.String(http.StatusNotFound, fmt.Sprintf("no link found for label", label))
+				return c.String(http.StatusNotFound, "no link found for label")
 			}
 			return c.String(http.StatusOK, link)
 		}
@@ -59,7 +59,7 @@ func NewServer(s storage.Storage) *echo.Echo {
 		link := s.GetLinkForLabel(label)
 
 		if link == "" {
-			return c.String(http.StatusNotFound, fmt.Sprintf("label not found", label))
+			return c.String(http.StatusNotFound, "label not found")
 		}
 
 		return c.Redirect(http.StatusFound, link)
