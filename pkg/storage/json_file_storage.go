@@ -58,12 +58,12 @@ func (jfs *JsonStorage) GetAllLabels() []string {
 		return nil
 	}
 
-	labels := make([]string, 0, len(m))
+	links := make([]string, 0, len(m))
 	for k := range m {
-		labels = append(labels, k)
+		links = append(links, k)
 	}
-	sort.Strings(labels)
-	return labels
+	sort.Strings(links)
+	return links
 }
 
 func (jfs *JsonStorage) AddLink(label string, url string, _ bool) error {

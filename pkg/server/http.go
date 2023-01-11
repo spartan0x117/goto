@@ -3,6 +3,7 @@ package server
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
@@ -12,7 +13,6 @@ import (
 func NewServer(s storage.Storage) *echo.Echo {
 	e := echo.New()
 	e.Logger.SetLevel(log.INFO)
-	//e.Use(middleware.Logger())
 
 	addHandler := func(c echo.Context) error {
 		e.Logger.Info("inside 'addHandler'")
@@ -27,7 +27,30 @@ func NewServer(s storage.Storage) *echo.Echo {
 		return c.HTML(http.StatusOK, addFormHtml)
 	}
 	e.GET("/add", addHandler)
+	e.GET("/add/", addHandler)
 	e.POST("/add", addHandler)
+	e.POST("/add/", addHandler)
+
+	findHandler := func(c echo.Context) error {
+		label := c.Param("label")
+		if label != "" {
+			link := s.GetLinkForLabel(label)
+			if link == "" {
+				return c.String(http.StatusNotFound, fmt.Sprintf("no link found for '%s'", label))
+			}
+			return c.String(http.StatusOK, link)
+		}
+
+		allLinks := s.GetAllLabels()
+		var sb strings.Builder
+		for _, link := range allLinks {
+			sb.WriteString(fmt.Sprintf("%s\n", link))
+		}
+		return c.String(http.StatusOK, sb.String())
+	}
+	e.GET("/find", findHandler)
+	e.GET("/find/", findHandler)
+	e.GET("/find/:label", findHandler)
 
 	gotoHandler := func(c echo.Context) error {
 		e.Logger.Info("inside 'gotoHandler'")
@@ -43,7 +66,6 @@ func NewServer(s storage.Storage) *echo.Echo {
 
 		return c.Redirect(http.StatusFound, link)
 	}
-
 	e.GET("/:label", gotoHandler)
 
 	return e
