@@ -18,15 +18,32 @@ json_config:
 
 For a git config, you need to have checked out a git repository containing a file named `links.json`
 
-### Using links in the browser
+## Setup using links in the browser
 - First, you must modify `/etc/hosts` to include `goto` and `www.goto` (or whatever you would like to type into the browser search bar as a prefix for the search, e.g. `goto/github` or `go/github`) as a local resolution. A minimal example:
 ```
 127.0.0.1   localhost goto www.goto
 ::1         localhost goto www.goto
 ```
+- Next, in order to be able to bind to port 80, you may need to make some changes (in testing, on Mac OS, no changes were needed. On Ubuntu 22.04, changes were needed). There are a few options:
+  - The simplest is to use `setcap` (you can read `man capabilities` and `man setcap` to learn more) to allow `goto server` to bind to priveleged ports. This can be done by running `sudo setcap 'CAP_NET_BIND_SERVICE=+ep' /path/to/goto/binary` (the path for the binary is likely `/usr/local/bin/goto`).
+  - Alternatively, and this would be an exercise for the user, you can run nginx locally as root as a proxy.
+
 - Next, for Firefox you must set `browser.fixup.dns_first_for_single_words` to `true`. 
   - You can do this by opening a Firefox window and typing `about:config` and hitting return. Then, in the search bar, type `browser.fixup.dns_first_for_single_words` and click the button on the right-hand side.
 - For Google Chrome no settings should need updating. However, you can test that the resolution is being applied by going to `chrome://net-internals/#dns` and doing a DNS lookup for `goto` (or whatever you entered for the prefix) in the `DNS` section.
+
+## API Endpoints / Using links in the browser
+You can access the following in your browser's search bar to use `goto` most efficiently!
+
+NOTE: This assumes the name you gave in `/etc/hosts` is `goto`
+
+- `goto/<label>`: Redirects to the url for the particular label, or returns `404 Not Found` if it does not exist.
+- `goto/add`: Opens a page that allows creating a new link. 
+  - Note that if the configured storage is `git`, adding may take a few seconds as it is performing both a `git pull` and `git push`.
+- `goto/find[/<label>]`: With no label in the path (i.e. `goto/find`), lists all labels. If a label is present in the path (i.e. `goto/find/example`), returns the url for the label without redirecting.
+- `goto/remove/<label>`: Removes the link for `label`, or returns `404 Not Found` if it does not exist. 
+  - Note that if the configured storage is `git`, removing may take a few seconds as it is performing both a `git pull` and `git push`.
+- `goto/sync`: Syncs with configured storage.
 
 ## Commands
 
