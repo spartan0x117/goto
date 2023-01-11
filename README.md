@@ -28,7 +28,7 @@ For a git config, you need to have checked out a git repository containing a fil
   - The simplest is to use `setcap` (you can read `man capabilities` and `man setcap` to learn more) to allow `goto server` to bind to priveleged ports. This can be done by running `sudo setcap 'CAP_NET_BIND_SERVICE=+ep' /path/to/goto/binary` (the path for the binary is likely `/usr/local/bin/goto`).
   - Alternatively, and this would be an exercise for the user, you can run nginx locally as root as a proxy.
 
-- Next, for Firefox you must set `browser.fixup.dns_first_for_single_words` to `true`. 
+- Next, for Firefox you must potentially make a change. No changes are necessary if you append a `/` to every request (i.e. `goto/example/` instead of `goto/example`). If you'd prefer to avoid this, you can set `browser.fixup.dns_first_for_single_words` to `true`. _However_, if your url bar is configured to search, this will cause any single-word searches to hang until the DNS lookup fails and it falls back to searching.
   - You can do this by opening a Firefox window and typing `about:config` and hitting return. Then, in the search bar, type `browser.fixup.dns_first_for_single_words` and click the button on the right-hand side.
 - For Google Chrome no settings should need updating. However, you can test that the resolution is being applied by going to `chrome://net-internals/#dns` and doing a DNS lookup for `goto` (or whatever you entered for the prefix) in the `DNS` section.
 
