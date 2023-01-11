@@ -103,7 +103,7 @@ func (gs *GitStorage) GetAllLabels() []string {
 	return gs.jsonStorage.GetAllLabels()
 }
 
-func (gs *GitStorage) AddLink(label string, url string) error {
+func (gs *GitStorage) AddLink(label string, url string, force bool) error {
 	// Always pull latest changes before adding a new link to avoid
 	// breaking changes
 	if err := gs.Sync(); err != nil {
@@ -115,7 +115,7 @@ func (gs *GitStorage) AddLink(label string, url string) error {
 	// Check if the link already exists, if it does, warn and prompt
 	// the user whether they would like to update it
 	existingLink := gs.jsonStorage.GetLinkForLabel(label)
-	if existingLink != "" {
+	if existingLink != "" && !force {
 		fmt.Printf("link already exists for '%s': %s. Would you like to update it? (y/n)\n> ", label, existingLink)
 		var shouldUpdate string
 		fmt.Scanln(&shouldUpdate)
@@ -126,7 +126,7 @@ func (gs *GitStorage) AddLink(label string, url string) error {
 		}
 	}
 
-	err := gs.jsonStorage.AddLink(label, url)
+	err := gs.jsonStorage.AddLink(label, url, false)
 	if err != nil {
 		return err
 	}

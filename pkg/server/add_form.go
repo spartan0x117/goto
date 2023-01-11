@@ -1,4 +1,6 @@
-<!DOCTYPE html>
+package server
+
+const addFormHtml = `<!DOCTYPE html>
 <html>
 <body>
 
@@ -15,4 +17,4 @@
 </form> 
 
 </body>
-</html>
+</html>`

@@ -32,7 +32,7 @@ func TestJsonFileStorageAddLink(t *testing.T) {
 		os.Remove("./testdata/tmp.json")
 	})
 
-	jfs.AddLink("grafana", "https://grafana.com")
+	jfs.AddLink("grafana", "https://grafana.com", false)
 	actual := jfs.GetLinkForLabel("grafana")
 	assert.Equal(t, "https://grafana.com", actual)
 }
@@ -45,7 +45,7 @@ func TestJsonFileStorageRemoveLink(t *testing.T) {
 		os.Remove("./testdata/tmp.json")
 	})
 
-	jfs.AddLink("grafana", "https://grafana.com")
+	jfs.AddLink("grafana", "https://grafana.com", false)
 	assert.NoError(t, jfs.RemoveLink("grafana"))
 	assert.Equal(t, "", jfs.GetLinkForLabel("grafana"))
 }
