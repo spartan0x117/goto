@@ -19,7 +19,7 @@ type Storage interface {
 	GetAllLabels() []string
 
 	// Adds a link for a label
-	AddLink(label string, url string) error
+	AddLink(label string, url string, force bool) error
 
 	// Removes a link for a label
 	RemoveLink(label string) error

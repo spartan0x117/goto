@@ -18,6 +18,16 @@ json_config:
 
 For a git config, you need to have checked out a git repository containing a file named `links.json`
 
+### Using links in the browser
+- First, you must modify `/etc/hosts` to include `goto` and `www.goto` (or whatever you would like to type into the browser search bar as a prefix for the search, e.g. `goto/github` or `go/github`) as a local resolution. A minimal example:
+```
+127.0.0.1   localhost goto www.goto
+::1         localhost goto www.goto
+```
+- Next, for Firefox you must set `browser.fixup.dns_first_for_single_words` to `true`. 
+  - You can do this by opening a Firefox window and typing `about:config` and hitting return. Then, in the search bar, type `browser.fixup.dns_first_for_single_words` and click the button on the right-hand side.
+- For Google Chrome no settings should need updating. However, you can test that the resolution is being applied by going to `chrome://net-internals/#dns` and doing a DNS lookup for `goto` (or whatever you entered for the prefix) in the `DNS` section.
+
 ## Commands
 
 - `add <label> <url>`: adds a new entry to the link store with the specified label and url. If an entry with the same label already exists,
@@ -35,6 +45,7 @@ For a git config, you need to have checked out a git repository containing a fil
     of `goto`'s subcommands.
 - `remove <label>`: removes the entry for the specified label.
   - NOTE: for a `git_config` remove will always pull the configured repo before running.
+- `server`: Runs a server locally on port 80. This is intended to be used as a proxy for use in the browser. 
 - `sync`: syncs with the configured remote. For a `json_config` this is a no-op. For a `git_config`, this pulls from the configured remote.
 
 ## Build/develop/setup locally
@@ -80,4 +91,4 @@ Create an initial empty `{}` map in `~/.config/goto/aliases.json` for storing al
   `gh:https://github.com` for quick access).
 - [ ] Initialization helpers (creating `~/.config/goto/` along with necessary files, setting up `links.json` in an empty repo).
 - [ ] Label/command tab-completion.
-- [ ] Server mode. Would expose a locally running API that could be used by a browser directly.
+- [X] Server mode. Would expose a locally running API that could be used by a browser directly.

@@ -11,6 +11,9 @@ clean:
 	go clean
 	rm ./${BINARY_OUT_DIR}/${BINARY_NAME}
 
+runserver:
+	go run ./main.go server
+
 test:
 	go test -v ./...
 

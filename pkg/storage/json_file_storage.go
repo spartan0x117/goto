@@ -5,6 +5,7 @@ import (
 	"errors"
 	"os"
 	"sort"
+	"strings"
 )
 
 type JsonStorage struct {
@@ -44,7 +45,11 @@ func (jfs *JsonStorage) GetLinkForLabel(label string) string {
 	if err != nil {
 		return ""
 	}
-	return m[label]
+	l := m[label]
+	if l != "" && !strings.HasPrefix(l, "https://") && !strings.HasPrefix(l, "http://") {
+		l = "http://" + l
+	}
+	return l
 }
 
 func (jfs *JsonStorage) GetAllLabels() []string {
@@ -53,15 +58,15 @@ func (jfs *JsonStorage) GetAllLabels() []string {
 		return nil
 	}
 
-	labels := make([]string, 0, len(m))
+	links := make([]string, 0, len(m))
 	for k := range m {
-		labels = append(labels, k)
+		links = append(links, k)
 	}
-	sort.Strings(labels)
-	return labels
+	sort.Strings(links)
+	return links
 }
 
-func (jfs *JsonStorage) AddLink(label string, url string) error {
+func (jfs *JsonStorage) AddLink(label string, url string, _ bool) error {
 	label = NormalizeLabel(label)
 	m, err := jfs.loadLinks()
 	if err != nil {
