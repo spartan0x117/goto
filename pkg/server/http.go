@@ -15,7 +15,6 @@ func NewServer(s storage.Storage) *echo.Echo {
 	e.Logger.SetLevel(log.INFO)
 
 	addHandler := func(c echo.Context) error {
-		e.Logger.Info("inside 'addHandler'")
 		if c.Request().Method == http.MethodPost {
 			label, link := c.FormValue("label"), c.FormValue("url")
 			err := s.AddLink(label, link, true) // TODO: Some kind of confirmation of overwriting a link
@@ -36,7 +35,7 @@ func NewServer(s storage.Storage) *echo.Echo {
 		if label != "" {
 			link := s.GetLinkForLabel(label)
 			if link == "" {
-				return c.String(http.StatusNotFound, fmt.Sprintf("no link found for '%s'", label))
+				return c.String(http.StatusNotFound, fmt.Sprintf("no link found for label", label))
 			}
 			return c.String(http.StatusOK, link)
 		}
@@ -52,21 +51,43 @@ func NewServer(s storage.Storage) *echo.Echo {
 	e.GET("/find/", findHandler)
 	e.GET("/find/:label", findHandler)
 
-	gotoHandler := func(c echo.Context) error {
-		e.Logger.Info("inside 'gotoHandler'")
+	openHandler := func(c echo.Context) error {
 		label := c.Param("label")
 		if label == "" {
-			return c.String(http.StatusOK, "Please enter a label: go/<label>")
+			return c.String(http.StatusOK, "please enter a label...")
 		}
 		link := s.GetLinkForLabel(label)
 
 		if link == "" {
-			return c.String(http.StatusNotFound, fmt.Sprintf("Label '%s' not found", label))
+			return c.String(http.StatusNotFound, fmt.Sprintf("label not found", label))
 		}
 
 		return c.Redirect(http.StatusFound, link)
 	}
-	e.GET("/:label", gotoHandler)
+	e.GET("/:label", openHandler)
+
+	removeHandler := func(c echo.Context) error {
+		if c.Param("label") == "" {
+			return c.String(http.StatusBadRequest, "please include a label to delete...")
+		}
+
+		err := s.RemoveLink(c.Param("label"))
+		if err != nil {
+			return c.String(http.StatusInternalServerError, "error trying to delete label...")
+		}
+		return c.String(http.StatusAccepted, "removed label")
+	}
+	e.GET("/remove/:label", removeHandler)
+
+	syncHandler := func(c echo.Context) error {
+		err := s.Sync()
+		if err != nil {
+			return c.String(http.StatusInternalServerError, "error trying to sync...")
+		}
+		return c.String(http.StatusOK, "done syncing")
+	}
+	e.GET("/sync", syncHandler)
+	e.GET("/sync/", syncHandler)
 
 	return e
 }
