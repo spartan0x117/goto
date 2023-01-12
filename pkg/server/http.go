@@ -3,6 +3,7 @@ package server
 import (
 	"fmt"
 	"net/http"
+	"net/url"
 	"strings"
 
 	"github.com/labstack/echo/v4"
@@ -56,10 +57,14 @@ func NewServer(s storage.Storage) *echo.Echo {
 		if label == "" {
 			return c.String(http.StatusOK, "please enter a label...")
 		}
+		label, path, pathExists := strings.Cut(label, "/")
 		link := s.GetLinkForLabel(label)
 
 		if link == "" {
 			return c.String(http.StatusNotFound, "label not found")
+		}
+		if pathExists {
+			link, _ = url.JoinPath(link, path)
 		}
 
 		return c.Redirect(http.StatusFound, link)
