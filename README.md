@@ -1,6 +1,6 @@
 # goto
 
-A CLI alternative to go/ links. The general idea is to allow for quickly visiting urls based on easily-remembered and discovered labels.
+The general idea is to allow for quickly visiting urls based on easily-remembered and discovered labels, either in the browser or via the CLI.
 These `label->url` pairs can be collaboratively updated, making it more powerful the more people in your group/org/company that use it.
 
 ## Configuration
