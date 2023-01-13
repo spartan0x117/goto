@@ -18,4 +18,5 @@ test:
 	go test -v ./...
 
 install:
-	install -D ${BINARY_OUT_DIR}/${BINARY_NAME} ${DEST}/${BINARY_NAME}
+	install -D ./${BINARY_OUT_DIR}/${BINARY_NAME} ${DEST}/${BINARY_NAME}
+	setcap 'CAP_NET_BIND_SERVICE=+ep' ${DEST}/${BINARY_NAME}
