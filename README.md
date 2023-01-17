@@ -54,11 +54,11 @@ _NOTE: What you type into the url bar must be recognized as a valid url for the 
   - `alias remove <alias>`: removes a local alias.
 - `find [<label>]`: displays the url for the specified label, if any. If no label is specified, will display *all* labels in the store. 
   Combine this with `grep` to find a label based on a regex!
+- `init`: explicitly create initial config files for goto. Will do nothing if they already exist.
 - `open <label>`: opens the url for the label in a browser. It is possible to supply a path to be used with the url.
   - For example: if the entry `jira:https://jira.com` existed, one could execute `goto jira/ops/123` and this would result in the url
     `https://jira.com/ops/123` being opened in the browser.
-  - NOTE: Running `goto <label>` is equivalent to running `goto open <label>`. This does mean that a label cannot have the same name as any 
-    of `goto`'s subcommands.
+  - NOTE: Running `goto <label>` is equivalent to running `goto open <label>`. This does mean that a label cannot have the same name as any of `goto`'s subcommands.
 - `remove <label>`: removes the entry for the specified label.
   - NOTE: for a `git_config` remove will always pull the configured repo before running.
 - `server`: Runs a server locally on port 80. This is intended to be used as a proxy for use in the browser. 
@@ -74,6 +74,7 @@ make build
 
 to build a binary to `out/goto`.  To install the binary, run:
 
+
 ```bash
 sudo make install
 ```
@@ -86,15 +87,14 @@ make install DEST=<path>
 
  where `<path>` is a directory in `$PATH` and is writable by you.
 
-Create a config directory for goto:
+Create config directory and files for goto:
 
 ```bash
-mkdir -p ~/.config/goto/
+goto init
 ```
 
-Add your config at `~/.config/goto/config.yaml`
+Files will be created in `~/.config/goto/`.
 
-Create an initial empty `{}` map in `~/.config/goto/aliases.json` for storing aliases
 
 ## Ideas for future development
 
@@ -105,6 +105,6 @@ Create an initial empty `{}` map in `~/.config/goto/aliases.json` for storing al
 - [X] Local aliases. Similar to the above, it would allow the user to create aliases for labels that are not pushed to a remote. This would prevent polluting the shared repo with duplicate urls. What is short/convenient for one person may not be for another
   (e.g. say there is an existing `github:https://github.com` entry. Someone who uses it a lot may want to have 
   `gh:https://github.com` for quick access).
-- [ ] Initialization helpers (creating `~/.config/goto/` along with necessary files, setting up `links.json` in an empty repo).
+- [X] Initialization helpers (creating `~/.config/goto/` along with necessary files, setting up `links.json` in an empty repo).
 - [ ] Label/command tab-completion.
 - [X] Server mode. Would expose a locally running API that could be used by a browser directly.
