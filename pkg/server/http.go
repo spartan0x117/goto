@@ -8,6 +8,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
+	"github.com/spartan0x117/goto/pkg/config"
 	"github.com/spartan0x117/goto/pkg/storage"
 )
 
@@ -30,6 +31,16 @@ func NewServer(s storage.Storage) *echo.Echo {
 	e.GET("/add/", addHandler)
 	e.POST("/add", addHandler)
 	e.POST("/add/", addHandler)
+
+	configHandler := func(c echo.Context) error {
+		configPath, err := config.GetConfigPath()
+		if err != nil {
+			return c.String(http.StatusNotFound, "could not locate config file")
+		}
+		return c.File(configPath)
+	}
+	e.GET("/config", configHandler)
+	e.GET("/config/", configHandler)
 
 	findHandler := func(c echo.Context) error {
 		label := c.Param("label")
